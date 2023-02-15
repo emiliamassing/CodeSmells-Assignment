@@ -1,4 +1,4 @@
-import CreateUser from "./models/CreateUser";
+import CreateUser from "./models/ICreateUser";
 import ShowProduct from "./models/ShowProduct";
 import Student from "./models/Student";
 import Temp from "./models/Temp";
@@ -51,7 +51,7 @@ function averageWeeklyTemperature(weeklyTemperature: Temp[]) {
 
 function showProduct(product: ShowProduct) {
   let parent = product.parent;
-  let container = document.createElement("div");
+  let container: HTMLElement = document.createElement("div");
   const title = createHeadingElement(product.name);
   const price = createStrongElement(product.price);
   const image = createImageElement(product.image);
@@ -89,7 +89,7 @@ function createImageElement(image: string) {
   */
 function presentStudents(students: Student[]) {
   for (const student of students) {
-    let container = document.createElement("div");
+    let container: HTMLElement = document.createElement("div");
     let checkbox = createCheckbox(student.handedInOnTime);
 
     container.appendChild(checkbox);
@@ -99,7 +99,7 @@ function presentStudents(students: Student[]) {
 };  
 
 function createCheckbox(handedInOnDeadline: boolean) {
-  let checkbox = document.createElement("input");
+  let checkbox: HTMLInputElement = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.checked = handedInOnDeadline;
 
@@ -111,11 +111,11 @@ function createCheckbox(handedInOnDeadline: boolean) {
   Lorem, ipsum, dolor, sit, amet
   Exemplet under löser problemet, men inte speciellt bra. Hur kan man göra istället?
   */
-function concatenateStrings() {
+function concatenateStrings(): string {
   let texts: string[] = ['Lorem', 'ipsum', 'dolor', 'sit', 'amet'];
 
   return texts.join(' ');
-}
+};
 
 /* 
 7. Denna funktion skall kontrollera att en användare är över 20 år och göra någonting.
@@ -125,16 +125,20 @@ function concatenateStrings() {
 */
 function createUser(user: CreateUser) {
   // Validation
+  const epochStartYear: number = 1970;
+  const minAge: number = 20;
 
-  let ageDiff = Date.now() - user.birthday.getTime();
-  let ageDate = new Date(ageDiff);
-  let userAge = Math.abs(ageDate.getUTCFullYear() - 1970);
+  let ageDiffInMilliSeconds = Date.now() - user.birthday.getTime();
+  let ageInDateFormat = new Date(ageDiffInMilliSeconds);
+  let userAge = Math.abs(ageInDateFormat.getUTCFullYear() - epochStartYear);
 
-  console.log(userAge);
-
-  if (!(userAge < 20)) {
+  if (userAge > minAge) {
     // Logik för att skapa en användare
   } else {
     return "Du är under 20 år";
-  }
-}
+  };
+};
+
+
+
+
