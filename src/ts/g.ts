@@ -1,4 +1,5 @@
 import CreateUser from "./models/CreateUser";
+import ShowProduct from "./models/ShowProduct";
 import Student from "./models/Student";
 import Temp from "./models/Temp";
 
@@ -31,26 +32,16 @@ function getStudentStatus(student: Student): string {
   */
 
 function averageWeeklyTemperature(weeklyTemperature: Temp[]) {
-  const MILLISECONDS_IN_A_WEEK: number = 604800000;
-  const DAYS_IN_A_WEEK: number = 7;
+  const millisecondsInAWeek: number = 604800000;
+  const daysInAWeek: number = 7;
   
-  /*let r = 0;
-
-  for (let i = 0; i < weeklyTemperature.length; i++) {
-    if (weeklyTemperature[i].city === "Stockholm") {
-      if (weeklyTemperature[i].todaysDate.getTime() > Date.now() - MILLISECONDS_IN_A_WEEK) {
-        r += weeklyTemperature[i].temperature;
-      }
-    }
-  }*/
-
   return weeklyTemperature.reduce((previous: number, current: Temp) => {
-    if (current.city === "Stockholm" && current.todaysDate.getTime() > Date.now() - MILLISECONDS_IN_A_WEEK) {
+    if (current.city === "Stockholm" && current.todaysDate.getTime() > Date.now() - millisecondsInAWeek) {
       return previous + current.temperature;
     };
     return previous;
   }, 0
-  ) / DAYS_IN_A_WEEK;
+  ) / daysInAWeek;
 };
 
 /*
@@ -58,27 +49,38 @@ function averageWeeklyTemperature(weeklyTemperature: Temp[]) {
   Se om du kan göra det bättre. Inte bara presentationen räknas, även strukturer.
   */
 
-function showProduct(
-  name: string,
-  price: number,
-  amount: number,
-  description: string,
-  image: string,
-  parent: HTMLElement
-) {
+function showProduct(product: ShowProduct) {
+  let parent = product.parent;
   let container = document.createElement("div");
-  let title = document.createElement("h4");
-  let pris = document.createElement("strong");
-  let imageTag = document.createElement("img");
-
-  title.innerHTML = name;
-  pris.innerHTML = price.toString();
-  imageTag.src = image;
+  const title = createHeadingElement(product.name);
+  const price = createStrongElement(product.price);
+  const image = createImageElement(product.image);
 
   container.appendChild(title);
-  container.appendChild(imageTag);
-  container.appendChild(pris);
+  container.appendChild(image);
+  container.appendChild(price);
   parent.appendChild(container);
+}
+
+function createHeadingElement(name: string) {
+  let headingElement = document.createElement("h4");
+  headingElement.innerHTML = name;
+
+  return headingElement;
+}
+
+function createStrongElement(price: number) {
+  let strongElement = document.createElement("strong");
+  strongElement.innerHTML = price.toString();
+
+  return strongElement;
+}
+
+function createImageElement(image: string) {
+  let imageElement = document.createElement("img");
+  imageElement.src = image;
+
+  return imageElement;
 }
 
 /*
