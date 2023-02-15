@@ -1,13 +1,9 @@
 class Student {
-    name: string;
-    handedInOnTime: boolean;
-    passed: boolean;
-
-    constructor(name: string, handedInOnTime: boolean, passed: boolean){
-        this.name = name;
-        this.handedInOnTime = handedInOnTime;
-        this.passed = passed;
-    };
+    constructor(
+        public name: string,
+        public handedInOnTime: boolean,
+        public passed: boolean,
+    ){}
 };
 
 export default Student;

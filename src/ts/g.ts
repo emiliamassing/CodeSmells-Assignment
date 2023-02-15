@@ -1,4 +1,6 @@
+import CreateUser from "./models/CreateUser";
 import Student from "./models/Student";
+import Temp from "./models/Temp";
 
 /*
   1. Se om du kan hitta två stycken code smells i följande funktion och rätta till dem.
@@ -6,61 +8,50 @@ import Student from "./models/Student";
   dessa hopplängder.
   */
 
-function getLength(jumpings: number[]): number {
+function getTotalJumpDistance(jumpings: number[]): number {
   return jumpings.reduce( (jumpDistanceSoFar, currentJump) => {
     return jumpDistanceSoFar + currentJump;
   });
-}
+};
 
 /*
   2. I detta exempel har vi fokuserat på if-statements. Se om du kan göra exemplet bättre!
   */
 
-/*class Student {
-  constructor(
-    public name: string,
-    public handedInOnTime: boolean,
-    public passed: boolean
-  ) {}
-}*/
-
 function getStudentStatus(student: Student): string {
-  student.passed =
-    student.name == "Sebastian"
-      ? student.handedInOnTime
-        ? true
-        : false
-      : false;
-
-  if (student.passed) {
-    return "VG";
-  } else {
-    return "IG";
+  if((student.name == 'Sebastian') && (student.handedInOnTime)){
+    return 'VG';
   }
-}
+  return 'IG';
+};
 
 /*
   3. Variabelnamn är viktiga. Kika igenom följande kod och gör om och rätt.
   Det finns flera code smells att identifiera här. Vissa är lurigare än andra.
   */
 
-class Temp {
-  constructor(public q: string, public where: Date, public v: number) {}
-}
+function averageWeeklyTemperature(weeklyTemperature: Temp[]) {
+  const MILLISECONDS_IN_A_WEEK: number = 604800000;
+  const DAYS_IN_A_WEEK: number = 7;
+  
+  /*let r = 0;
 
-function averageWeeklyTemperature(heights: Temp[]) {
-  let r = 0;
-
-  for (let who = 0; who < heights.length; who++) {
-    if (heights[who].q === "Stockholm") {
-      if (heights[who].where.getTime() > Date.now() - 604800000) {
-        r += heights[who].v;
+  for (let i = 0; i < weeklyTemperature.length; i++) {
+    if (weeklyTemperature[i].city === "Stockholm") {
+      if (weeklyTemperature[i].todaysDate.getTime() > Date.now() - MILLISECONDS_IN_A_WEEK) {
+        r += weeklyTemperature[i].temperature;
       }
     }
-  }
+  }*/
 
-  return r / 7;
-}
+  return weeklyTemperature.reduce((previous: number, current: Temp) => {
+    if (current.city === "Stockholm" && current.todaysDate.getTime() > Date.now() - MILLISECONDS_IN_A_WEEK) {
+      return previous + current.temperature;
+    };
+    return previous;
+  }, 0
+  ) / DAYS_IN_A_WEEK;
+};
 
 /*
   4. Följande funktion kommer att presentera ett objekt i dom:en. 
@@ -135,15 +126,10 @@ function concatenateStrings() {
     fler och fler parametrar behöver läggas till? T.ex. avatar eller adress. Hitta en bättre
     lösning som är hållbar och skalar bättre. 
 */
-function createUser(
-  name: string,
-  birthday: Date,
-  email: string,
-  password: string
-) {
+function createUser(user: CreateUser) {
   // Validation
 
-  let ageDiff = Date.now() - birthday.getTime();
+  let ageDiff = Date.now() - user.birthday.getTime();
   let ageDate = new Date(ageDiff);
   let userAge = Math.abs(ageDate.getUTCFullYear() - 1970);
 

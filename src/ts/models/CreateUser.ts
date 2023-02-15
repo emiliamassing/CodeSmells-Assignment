@@ -1,15 +1,10 @@
 class CreateUser{
-    name: string;
-    birthday: Date;
-    email: string;
-    password: string;
-
-    constructor(name: string, birthday: Date, email: string, password: string){
-        this.name = name;
-        this.birthday = birthday;
-        this.email = email;
-        this.password = password;
-    }
+    constructor(
+        public name: string,
+        public birthday: Date,
+        public email: string,
+        public password: string,
+    ){}
 };
 
 export default CreateUser;
