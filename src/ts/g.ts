@@ -36,7 +36,7 @@ function averageWeeklyTemperature(weeklyTemperature: Temp[]) {
   const daysInAWeek: number = 7;
   
   return weeklyTemperature.reduce((previous: number, current: Temp) => {
-    if (current.city === "Stockholm" && current.todaysDate.getTime() > Date.now() - millisecondsInAWeek) {
+    if ((current.city === "Stockholm") && (current.todaysDate.getTime() > (Date.now() - millisecondsInAWeek))) {
       return previous + current.temperature;
     };
     return previous;
