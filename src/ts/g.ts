@@ -89,27 +89,22 @@ function createImageElement(image: string) {
   */
 function presentStudents(students: Student[]) {
   for (const student of students) {
-    if (student.handedInOnTime) {
-      let container = document.createElement("div");
-      let checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = true;
+    let container = document.createElement("div");
+    let checkbox = createCheckbox(student.handedInOnTime);
 
-      container.appendChild(checkbox);
-      let listOfStudents = document.querySelector("ul#passedstudents");
-      listOfStudents?.appendChild(container);
-    } else {
-      let container = document.createElement("div");
-      let checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = false;
+    container.appendChild(checkbox);
 
-      container.appendChild(checkbox);
-      let listOfStudents = document.querySelector("ul#failedstudents");
-      listOfStudents?.appendChild(container);
-    }
+    let listOfStudents = student.handedInOnTime ? document.querySelector('ul#passedstudents') : document.querySelector("ul#failedstudents");
   }
-}
+};  
+
+function createCheckbox(handedInOnDeadline: boolean) {
+  let checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = handedInOnDeadline;
+
+  return checkbox;
+};
 
 /*
   6. Skriv en funktion som skall slå ihop följande texter på ett bra sätt:
