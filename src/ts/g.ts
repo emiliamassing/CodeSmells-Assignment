@@ -60,28 +60,28 @@ function showProduct(product: ShowProduct) {
   container.appendChild(image);
   container.appendChild(price);
   parent.appendChild(container);
-}
+};
 
 function createHeadingElement(name: string) {
   let headingElement = document.createElement("h4");
   headingElement.innerHTML = name;
 
   return headingElement;
-}
+};
 
 function createStrongElement(price: number) {
   let strongElement = document.createElement("strong");
   strongElement.innerHTML = price.toString();
 
   return strongElement;
-}
+};
 
 function createImageElement(image: string) {
   let imageElement = document.createElement("img");
   imageElement.src = image;
 
   return imageElement;
-}
+};
 
 /*
   5. Följande funktion kommer presentera studenter. Men det finns ett antal saker som 
@@ -89,10 +89,10 @@ function createImageElement(image: string) {
   */
 function presentStudents(students: Student[]) {
   for (const student of students) {
-    let container: HTMLElement = document.createElement("div");
+    let listItem: HTMLElement = document.createElement("li"); //dubbelkolla detta
     let checkbox = createCheckbox(student.handedInOnTime);
 
-    container.appendChild(checkbox);
+    listItem.appendChild(checkbox);
 
     let listOfStudents = student.handedInOnTime ? document.querySelector('ul#passedstudents') : document.querySelector("ul#failedstudents");
   }
@@ -135,7 +135,7 @@ function createUser(user: CreateUser) {
   if (userAge > minAge) {
     // Logik för att skapa en användare
   } else {
-    return "Du är under 20 år";
+    return `Du är under ${minAge} år.`;
   };
 };
 
