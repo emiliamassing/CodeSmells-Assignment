@@ -1,22 +1,11 @@
-/*
-1. Se om du kan hitta problem med koden nedan och se om du kan göra den bättre.
-*/
-export enum Sort {
-  PRICE_ASCENDING = "Stigande pris",
-  PRICE_DECENDING = "Sjunkande pris",
-  NAME_ALPHABETIC = "Alfabetisk ordning",
-  NAME_ALPHABETIC_REVERSE = "Omvänd alfabetisk ordning",
-};
+import { Cart } from "./vgModels/Cart";
+import { CartProduct } from "./vgModels/CartProduct";
+import { Product } from "./vgModels/Product";
+import { Sort } from "./vgModels/sortingEnum";
 
-export class Product {
-  constructor(
-    public id: number,
-    public name: string,
-    public imageUrl: string[],
-    public price: number,
-    public description: string
-  ) {}
-};
+/*
+  1. Se om du kan hitta problem med koden nedan och se om du kan göra den bättre.
+*/
 
 export function sortProductsBy(sortBy: Sort, products: Product[]): Product[] {
   let sortedList: Product[] = [];
@@ -66,10 +55,7 @@ function sortList(whichAttribute: string, products: Product[]): Product[] {
 
 /*
   2. Refaktorera funktionen createProductHtml :)
-  */
-class Cart {
-  addToCartIndex(i: number) {}
-};
+*/
 
 export let cartList = JSON.parse(localStorage.getItem("savedCartList") || "[]");
 export let productList = JSON.parse(localStorage.getItem("savedProductList") || "[]");
@@ -185,15 +171,7 @@ function updateFloatingCart() {
 
 /*
   3. Refaktorera funktionen getfromstorage
-  */
-export class CartProduct {
-  constructor(
-    public name: string,
-    public price: number,
-    public amount: number,
-    public image?: string
-  ) {}
-};
+*/
 
 function createAmountText() {
   let amountText: HTMLTableCellElement = document.createElement("th");
