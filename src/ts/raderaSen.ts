@@ -233,4 +233,4 @@
     checkkouttotal2.appendChild(totalprice2);
     totalprice2.innerHTML = addition + "$";
     totalprice2.id = "totalincenter";
-  }
+  };

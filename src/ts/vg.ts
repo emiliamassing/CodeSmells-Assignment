@@ -230,6 +230,13 @@ function createMinusButton() {
   return minusIcon;
 };
 
+function createTotalPriceElement() {
+  let totalPrice: HTMLTableCellElement = document.createElement("th");
+  totalPrice.id = "totalPrice";
+
+  return totalPrice;
+};
+
 function getfromstorage() {
   let amountContainer = document.getElementById("amount-checkout-container2") as HTMLDivElement;
   let productQuantity = document.getElementById("product-quantity") as HTMLTableRowElement;
@@ -267,14 +274,19 @@ function getfromstorage() {
     amountQuantity.appendChild(minusBtn);
   };
 
-  let addition: number = 0;
+  function countTotalSum () {
+    let total = 0;
 
-  for (let i = 0; i < cartItems.length; i++) { 
-    addition += cartItems[i].price *= cartItems[i].amount; //Skapa egen funktion?
+    for (let i = 0; i < cartItems.length; i++) { 
+      total += cartItems[i].price *= cartItems[i].amount;
+    };
+
+    return total;
   };
 
-  let totalPrice: HTMLTableCellElement = document.createElement("th");
+  let total = countTotalSum();
+  let totalPrice = createTotalPriceElement();
+  totalPrice.innerHTML = total + "$";
+  
   checkoutTotal.appendChild(totalPrice);
-  totalPrice.innerHTML = addition + "$";
-  totalPrice.id = "totalPrice";
 };
