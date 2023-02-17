@@ -68,7 +68,7 @@ function sortList(whichAttribute: string, products: Product[]): Product[] {
   2. Refaktorera funktionen createProductHtml :)
   */
 class Cart {
-  addToCart(i: number) {}
+  addToCartIndex(i: number) {}
 };
 
 export let cartList = JSON.parse(localStorage.getItem("savedCartList") || "[]");
@@ -86,10 +86,10 @@ export let productList = JSON.parse(localStorage.getItem("savedProductList") || 
 export function createProductHtml() {
 
   for (let i = 0; i < productList.length; i++) {
-    let dogproduct: HTMLDivElement = document.createElement("div");
+    let dogProduct: HTMLDivElement = document.createElement("div");
     let dogImgContainer: HTMLDivElement = document.createElement("div");
     dogImgContainer.className = "dogimgcontainer";
-    dogproduct.appendChild(dogImgContainer);
+    dogProduct.appendChild(dogImgContainer);
     let dogImg: HTMLImageElement = document.createElement("img");
 
     dogImg.src = productList[i].picture;
@@ -117,15 +117,15 @@ export function createProductHtml() {
 
     let name: HTMLHeadingElement = document.createElement("h5");
     name.innerHTML = productList[i].name;
-    dogproduct.appendChild(name);
+    dogProduct.appendChild(name);
 
     let price: HTMLHeadingElement = document.createElement("p");
     price.innerHTML = "$" + productList[i].price;
-    dogproduct.appendChild(price);
+    dogProduct.appendChild(price);
 
     let info: HTMLHeadingElement = document.createElement("p");
     info.innerHTML = productList[i].info;
-    dogproduct.appendChild(info);
+    dogProduct.appendChild(info);
 
     productList[i].productSpec = false;
 
@@ -138,34 +138,34 @@ export function createProductHtml() {
 
     cartSymbol.addEventListener("click", () => {
       let cart = new Cart();
-      cart.addToCart(i);
-      updateFloatingCart(); // ?
+      cart.addToCartIndex(i);
+      updateFloatingCart();
     });
 
     if (productList[i].category === "sassy") {
       let cat1: HTMLElement = document.getElementById("sassy") as HTMLElement;
-      dogproduct.className = "dogproduct";
-      cat1.appendChild(dogproduct);
+      dogProduct.className = "dogProduct";
+      cat1.appendChild(dogProduct);
     }
     if (productList[i].category === "criminal") {
       let cat2: HTMLElement = document.getElementById("criminal") as HTMLElement;
-      dogproduct.className = "dogproduct";
-      cat2.appendChild(dogproduct);
+      dogProduct.className = "dogProduct";
+      cat2.appendChild(dogProduct);
     }
     if (productList[i].category == "singles") {
       let cat3: HTMLElement = document.getElementById("singles") as HTMLElement;
-      dogproduct.className = "dogproduct";
-      cat3.appendChild(dogproduct);
+      dogProduct.className = "dogProduct";
+      cat3.appendChild(dogProduct);
     }
     if (productList[i].category === "puppy") {
       let cat4: HTMLElement = document.getElementById("puppy") as HTMLElement;
-      dogproduct.className = "dogproduct";
-      cat4.appendChild(dogproduct);
+      dogProduct.className = "dogProduct";
+      cat4.appendChild(dogProduct);
     }
     if (productList[i].category === "oldies") {
       let cat5: HTMLElement = document.getElementById("oldies") as HTMLElement;
-      dogproduct.className = "dogproduct";
-      cat5.appendChild(dogproduct);
+      dogProduct.className = "dogProduct";
+      cat5.appendChild(dogProduct);
     }
   }
 
@@ -175,7 +175,7 @@ export function createProductHtml() {
 };
 
 function updateFloatingCart() {
-  let quantity = cartList.reduce((previous: number, current: number) => { //Dubbelkolla denna
+  let quantity = cartList.reduce((previous: number, current: number) => { 
     return previous + current;
   });
 
@@ -189,88 +189,114 @@ function updateFloatingCart() {
 export class CartProduct {
   constructor(
     public name: string,
-    public image: string,
     public price: number,
-    public amount: number
+    public amount: number,
+    public image?: string
   ) {}
+};
+
+function createAmountText() {
+  let amountText: HTMLTableCellElement = document.createElement("th");
+  amountText.innerHTML = "Amount: ";
+
+  return amountText;
+};
+
+function createProductQuantityText(){
+  let quantityText: HTMLTableCellElement = document.createElement("th");
+  quantityText.innerHTML = "Change quantity:";
+
+  return quantityText;
+};
+
+function createTotalText() {
+  let totaltext: HTMLTableCellElement = document.createElement("th");
+  totaltext.innerHTML = "Total: ";
+
+  return totaltext;
+};
+
+function createTableCells() {
+  let amountContainer = document.getElementById("amount-checkout-container2") as HTMLDivElement;
+  let productQuantity = document.getElementById("product-quantity") as HTMLTableRowElement;
+  let checkoutTotal = document.getElementById("title-total") as HTMLTableCellElement;
+
+  const amountText = createAmountText();
+  const quantityText = createProductQuantityText();
+  const totalText = createTotalText();
+
+  amountContainer.appendChild(amountText);
+  productQuantity.appendChild(quantityText);
+  checkoutTotal.appendChild(totalText);
+};
+
+function createPlusButton(){
+  let amountPlusBtn: HTMLButtonElement = document.createElement("button");
+  amountPlusBtn.className = "plusbtn";
+  
+  let plusIcon: HTMLSpanElement = document.createElement("i");
+  plusIcon.className = "fas fa-plus";
+  amountPlusBtn.appendChild(plusIcon);
+
+  return plusIcon;
 }
 
+function createMinusButton() {
+  let amountMinusBtn: HTMLButtonElement = document.createElement("button");
+  amountMinusBtn.className = "minusbtn";
+
+  let minusIcon: HTMLSpanElement = document.createElement("i");
+  minusIcon.className = "fas fa-minus";
+  amountMinusBtn.appendChild(minusIcon);
+
+  return minusIcon;
+};
+
 function getfromstorage() {
-  let container = document.getElementById("checkout-table");
+  let amountContainer = document.getElementById("amount-checkout-container2") as HTMLDivElement;
+  let productQuantity = document.getElementById("product-quantity") as HTMLTableRowElement;
+  let checkoutTotal = document.getElementById("title-total") as HTMLTableCellElement;
 
-  let fromstorage: string = localStorage.getItem("cartArray") || "";
-  let astext: CartProduct[] = JSON.parse(fromstorage);
+  let fromStorage: string = localStorage.getItem("cartArray") || "";
+  let cartItems: CartProduct[] = JSON.parse(fromStorage);
 
-  let productcontainer = document.getElementById(
-    "product-ckeckout-container"
-  ) as HTMLDivElement;
+  createTableCells();
 
-  let amountcontainer = document.getElementById(
-    "amount-checkout-container2"
-  ) as HTMLDivElement;
-  let amounttext: HTMLTableCellElement = document.createElement("th");
-  amountcontainer.appendChild(amounttext);
-  amounttext.innerHTML = "amount:";
+  for (let i: number = 0; i < cartItems.length; i++) {
+    let titleContainer = document.getElementById("title-container") as HTMLTableRowElement;
+    let strongElement = document.createElement("strong") as HTMLElement;
+    strongElement.innerHTML = "Products: ";
+    titleContainer.appendChild(strongElement);
 
-  let titlecontainer = document.getElementById(
-    "title-container"
-  ) as HTMLTableRowElement;
-  titlecontainer.innerHTML = "<strong>products:</strong>";
+    let productName: HTMLTableCellElement = document.createElement("th");
+    titleContainer.appendChild(productName);
+    productName.innerHTML = cartItems[i].name;
+    productName.className = "productName";
 
-  let productquantity = document.getElementById(
-    "product-quantity"
-  ) as HTMLTableRowElement;
-  let qttext: HTMLTableCellElement = document.createElement("th");
-  productquantity.appendChild(qttext);
-  qttext.innerHTML = "change quantity:";
+    let amountOfItems: HTMLTableCellElement = document.createElement("th");
+    amountContainer.appendChild(amountOfItems);
+    amountOfItems.innerHTML = "x" + cartItems[i].amount;
+    amountOfItems.className = "productAmount";
 
-  let checkkouttotal2 = document.getElementById(
-    "title-total"
-  ) as HTMLTableCellElement;
-  let totaltext: HTMLTableCellElement = document.createElement("th");
-  checkkouttotal2.appendChild(totaltext);
-  totaltext.innerHTML = "total:";
+    let amountQuantity: HTMLTableCellElement = document.createElement("th");
+    amountQuantity.className = "amountQuantity";
+    productQuantity.appendChild(amountQuantity);
 
-  for (let i: number = 0; i < astext.length; i++) {
-    let productt: HTMLTableCellElement = document.createElement("th");
-    titlecontainer.appendChild(productt);
-    productt.innerHTML = astext[i].name;
-    productt.className = "hej";
+    const plusBtn = createPlusButton();
+    const minusBtn = createMinusButton();
 
-    let amountt: HTMLTableCellElement = document.createElement("th");
-    amountcontainer.appendChild(amountt);
-    amountt.innerHTML = "x" + astext[i].amount;
-    amountt.className = "hej";
-
-    let amountqt: HTMLTableCellElement = document.createElement("th");
-    productquantity.appendChild(amountqt);
-    let amountplusbtn: HTMLButtonElement = document.createElement("button");
-    amountqt.appendChild(amountplusbtn);
-    amountqt.className = "hej";
-
-    let icon: HTMLSpanElement = document.createElement("i");
-    amountplusbtn.appendChild(icon);
-
-    icon.className = "fas fa-minus";
-    amountplusbtn.className = "plusbtn";
-
-    let icon2: HTMLSpanElement = document.createElement("i");
-    icon2.className = "fas fa-plus";
-
-    let amountminusbtn: HTMLButtonElement = document.createElement("button");
-    amountqt.appendChild(amountminusbtn);
-    amountminusbtn.appendChild(icon2);
-    amountminusbtn.className = "minusbtn";
-  }
+    amountQuantity.appendChild(plusBtn);
+    amountQuantity.appendChild(minusBtn);
+  };
 
   let addition: number = 0;
 
-  for (let i = 0; i < astext.length; i++) {
-    addition += astext[i].price *= astext[i].amount;
-  }
+  for (let i = 0; i < cartItems.length; i++) { 
+    addition += cartItems[i].price *= cartItems[i].amount; //Skapa egen funktion?
+  };
 
-  let totalprice2: HTMLTableCellElement = document.createElement("th");
-  checkkouttotal2.appendChild(totalprice2);
-  totalprice2.innerHTML = addition + "$";
-  totalprice2.id = "totalincenter";
-}
+  let totalPrice: HTMLTableCellElement = document.createElement("th");
+  checkoutTotal.appendChild(totalPrice);
+  totalPrice.innerHTML = addition + "$";
+  totalPrice.id = "totalPrice";
+};

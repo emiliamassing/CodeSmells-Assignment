@@ -1,7 +1,7 @@
-import CreateUser from "./models/ICreateUser";
-import ShowProduct from "./models/ShowProduct";
-import Student from "./models/Student";
-import Temp from "./models/Temp";
+import CreateUser from "./gModels/ICreateUser";
+import ShowProduct from "./gModels/ShowProduct";
+import Student from "./gModels/Student";
+import Temp from "./gModels/Temp";
 
 /*
   1. Se om du kan hitta två stycken code smells i följande funktion och rätta till dem.
