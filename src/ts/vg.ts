@@ -27,7 +27,7 @@ export function sortProductsBy(sortBy: Sort, products: Product[]): Product[] {
       sortedList.reverse();
     break;
 
-    default: throw new Error('Ogiltigt val av sortering');
+    default: throw new Error('Incorrect sorting choice');
   };
 
   return sortedList;
@@ -60,106 +60,6 @@ function sortList(whichAttribute: string, products: Product[]): Product[] {
 export let cartList = JSON.parse(localStorage.getItem("savedCartList") || "[]");
 export let productList = JSON.parse(localStorage.getItem("savedProductList") || "[]");
 
-/*
-  Funktioner:
-  - Välja kategori
-  - Uppdatera varukorg
-  - Skapa HTML
-  - Spara i local storage?
-  - Hover över bild?
-*/
-
-export function createProductHtml() {
-
-  for (let i = 0; i < productList.length; i++) {
-    let dogProduct: HTMLDivElement = document.createElement("div");
-    let dogImgContainer: HTMLDivElement = document.createElement("div");
-    dogImgContainer.className = "dogimgcontainer";
-    dogProduct.appendChild(dogImgContainer);
-    let dogImg: HTMLImageElement = document.createElement("img");
-
-    dogImg.src = productList[i].picture;
-    dogImg.alt = productList[i].pictureAlt;
-
-    dogImg.addEventListener("mouseover", () => {
-      cartSymbolContainer.classList.add("hover");
-      dogImg.classList.add("hover");
-    });
-
-    dogImg.addEventListener("mouseout", () => {
-      dogImg.classList.remove("hover");
-      cartSymbolContainer.classList.remove("hover");
-    });
-
-    dogImgContainer.appendChild(dogImg);
-
-    let cartSymbolContainer: HTMLDivElement = document.createElement("div");
-    cartSymbolContainer.className = "cartSymbolContainer";
-    dogImgContainer.appendChild(cartSymbolContainer);
-
-    let cartSymbol: HTMLElement = document.createElement("i");
-    cartSymbol.className = "bi bi-bag-plus";
-    cartSymbolContainer.appendChild(cartSymbol);
-
-    let name: HTMLHeadingElement = document.createElement("h5");
-    name.innerHTML = productList[i].name;
-    dogProduct.appendChild(name);
-
-    let price: HTMLHeadingElement = document.createElement("p");
-    price.innerHTML = "$" + productList[i].price;
-    dogProduct.appendChild(price);
-
-    let info: HTMLHeadingElement = document.createElement("p");
-    info.innerHTML = productList[i].info;
-    dogProduct.appendChild(info);
-
-    productList[i].productSpec = false;
-
-    dogImg.addEventListener("click", () => {
-      productList[i].productSpec = !productList[i].productSpec;
-      window.location.href = "product-spec.html#backArrow";
-      let saveAsText = JSON.stringify(productList);
-      localStorage.setItem("savedProductList", saveAsText);
-    });
-
-    cartSymbol.addEventListener("click", () => {
-      let cart = new Cart();
-      cart.addToCartIndex(i);
-      updateFloatingCart();
-    });
-
-    if (productList[i].category === "sassy") {
-      let cat1: HTMLElement = document.getElementById("sassy") as HTMLElement;
-      dogProduct.className = "dogProduct";
-      cat1.appendChild(dogProduct);
-    }
-    if (productList[i].category === "criminal") {
-      let cat2: HTMLElement = document.getElementById("criminal") as HTMLElement;
-      dogProduct.className = "dogProduct";
-      cat2.appendChild(dogProduct);
-    }
-    if (productList[i].category == "singles") {
-      let cat3: HTMLElement = document.getElementById("singles") as HTMLElement;
-      dogProduct.className = "dogProduct";
-      cat3.appendChild(dogProduct);
-    }
-    if (productList[i].category === "puppy") {
-      let cat4: HTMLElement = document.getElementById("puppy") as HTMLElement;
-      dogProduct.className = "dogProduct";
-      cat4.appendChild(dogProduct);
-    }
-    if (productList[i].category === "oldies") {
-      let cat5: HTMLElement = document.getElementById("oldies") as HTMLElement;
-      dogProduct.className = "dogProduct";
-      cat5.appendChild(dogProduct);
-    }
-  }
-
-  let saveAsText = JSON.stringify(productList);
-  localStorage.setItem("savedProductList", saveAsText);
-  sessionStorage.clear();
-};
-
 function updateFloatingCart() {
   let quantity = cartList.reduce((previous: number, current: number) => { 
     return previous + current;
@@ -167,6 +67,122 @@ function updateFloatingCart() {
 
   let floatingCart = document.getElementById("floatingcartnumber") as HTMLElement;
   floatingCart.innerHTML = "" + quantity;
+};
+
+function createCartHtml() {
+  let cartSymbolContainer: HTMLDivElement = document.createElement("div");
+  let cartSymbol: HTMLElement = document.createElement("i");
+
+  cartSymbolContainer.className = "cartSymbolContainer";
+  cartSymbol.className = "bi bi-bag-plus";
+
+  cartSymbolContainer.appendChild(cartSymbol);
+
+  return {cartSymbolContainer, cartSymbol};
+};
+
+function dogImgHovereffect (dogImg: HTMLImageElement, cartContainer: HTMLDivElement) {
+
+  dogImg.addEventListener("mouseover", () => {
+    cartContainer.classList.add("hover");
+    dogImg.classList.add("hover");
+  });
+
+  dogImg.addEventListener("mouseout", () => {
+    cartContainer.classList.remove("hover");
+    dogImg.classList.remove("hover");
+  });
+};
+
+function updateCartIndex(cartSymbol: HTMLElement, i: number) {
+  cartSymbol.addEventListener("click", () => {
+    let cart = new Cart();
+    cart.addToCartIndex(i);
+    updateFloatingCart();
+  });
+};
+
+function productHtml(i: number){
+  let name: HTMLHeadingElement = document.createElement("h5");
+  let price: HTMLHeadingElement = document.createElement("p");
+  let info: HTMLHeadingElement = document.createElement("p");
+
+  name.innerHTML = productList[i].name;
+  price.innerHTML = "$" + productList[i].price;
+  info.innerHTML = productList[i].info;
+
+  return {name, price, info};
+};
+
+function showProductSpec(i: number, dogImg: HTMLImageElement) {
+  dogImg.addEventListener("click", () => {
+    productList[i].productSpec = !productList[i].productSpec;
+    window.location.href = "product-spec.html#backArrow";
+    let saveAsText = JSON.stringify(productList);
+    localStorage.setItem("savedProductList", saveAsText);
+  });
+};
+
+export function createProductHtml() {
+  for (let i = 0; i < productList.length; i++) {
+    let dogProduct: HTMLDivElement = document.createElement("div");
+    let dogImgContainer: HTMLDivElement = document.createElement("div");
+    let dogImg: HTMLImageElement = document.createElement("img");
+    let {cartSymbolContainer, cartSymbol} = createCartHtml();
+
+    dogProduct.className ='dogProduct';
+    dogImgContainer.className = "dogimgcontainer";
+
+    dogProduct.appendChild(dogImgContainer);
+    dogImgContainer.appendChild(dogImg);
+    dogImgContainer.appendChild(cartSymbolContainer);
+    
+    dogImg.src = productList[i].picture;
+    dogImg.alt = productList[i].pictureAlt;
+
+    dogImgHovereffect(dogImg, cartSymbolContainer);
+
+    let {name, price, info} = productHtml(i);
+
+    dogProduct.appendChild(name);
+    dogProduct.appendChild(price);
+    dogProduct.appendChild(info);
+
+    productList[i].productSpec = false;
+
+    showProductSpec(i, dogImg);    
+
+    updateCartIndex(cartSymbol, i);
+
+    let categories = getCategories();
+    categories?.appendChild(dogProduct);
+   
+    function getCategories() {
+      switch(productList) {
+        case productList[i].category === "sassy":
+          return document.getElementById("sassy") as HTMLElement;
+        break;
+        case productList[i].category === "criminal":
+          return document.getElementById("criminal") as HTMLElement;
+        break;
+        case productList[i].category == "singles":
+          return document.getElementById("singles") as HTMLElement;
+        break;
+        case productList[i].category === "puppy":
+          document.getElementById("puppy") as HTMLElement;
+        break;
+        case productList[i].category === "oldies":
+          return document.getElementById("oldies") as HTMLElement;
+        break;
+        
+        default: throw new Error('Category does now exist');
+      };
+    }
+  };
+
+  let saveAsText = JSON.stringify(productList);
+  localStorage.setItem("savedProductList", saveAsText);
+  sessionStorage.clear();
 };
 
 /*
@@ -287,6 +303,6 @@ function getfromstorage() {
   let total = countTotalSum();
   let totalPrice = createTotalPriceElement();
   totalPrice.innerHTML = total + "$";
-  
+
   checkoutTotal.appendChild(totalPrice);
 };
